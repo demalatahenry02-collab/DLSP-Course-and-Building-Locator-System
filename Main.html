@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DLSP Course & Building Locator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: { 
+                extend: { 
+                    colors: { 
+                        emerald: '#10b981',
+                        lightgreen: '#86efac'
+                    } 
+                } 
+            }
+        }
+    </script>
+    <style>
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-image: url('https://static.readdy.ai/image/1bddd4377eb8b0a4a6d2b3788db1ce7f/02c1eadfd8a44d8b8c3d320560de775f.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+        .hidden { display: none; }
+        .bg-overlay { background-color: rgba(134, 239, 172, 0.15); }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+    <!-- NAVBAR (Hidden on login) -->
+    <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 bg-lightgreen/80 backdrop-blur-sm hidden">
+        <div class="w-full px-4 md:px-8 py-3 flex items-center justify-between">
+            <button onclick="showPage('dashboard')" class="flex items-center gap-2">
+                <img src="https://static.readdy.ai/image/1bddd4377eb8b0a4a6d2b3788db1ce7f/02c1eadfd8a44d8b8c3d320560de775f.png" alt="Logo" class="w-10 h-10 rounded-full">
+                <span class="font-semibold text-gray-800">DLSP Locator</span>
+            </button>
+            <div class="flex gap-3">
+                <button onclick="showPage('dashboard')" class="px-3 py-2 text-sm text-gray-800 hover:bg-white/30 rounded"><i class="ri-home-line"></i> Home</button>
+                <button onclick="smartBack()" class="px-3 py-2 text-sm text-gray-800 hover:bg-white/30 rounded"><i class="ri-arrow-left-line"></i> Back</button>
+                <button onclick="logout()" class="px-3 py-2 text-sm text-red-600 hover:bg-white/30 rounded"><i class="ri-logout-box-r-line"></i> Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- AUTHENTICATION PAGE (Gmail Style) -->
+    <div id="login-page" class="min-h-screen flex items-center justify-center bg-overlay px-4">
+        <div class="w-full max-w-md bg-white/90 rounded-2xl shadow-lg p-8">
+            <div class="text-center mb-8">
+                <img src="https://static.readdy.ai/image/1bddd4377eb8b0a4a6d2b3788db1ce7f/02c1eadfd8a44d8b8c3d320560de775f.png" alt="Logo" class="w-20 h-20 mx-auto mb-4 rounded-full">
+                <h1 id="auth-title" class="text-2xl font-bold text-gray-800">Sign in</h1>
+                <p id="auth-subtitle" class="text-gray-600">Use your Gmail account</p>
+            </div>
+            
+            <form onsubmit="handleAuth(event)" class="space-y-4">
+                <input type="email" id="email" placeholder="Email or phone" class="w-full px-4 py-3 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-emerald-500" required>
+                <input type="password" id="password" placeholder="Enter your password" class="w-full px-4 py-3 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-emerald-500" required>
+                
+                <div id="errorMsg" class="hidden text-red-600 text-xs">Invalid credentials. Use test@gmail.com / 1234</div>
+                
+                <div class="flex justify-between items-center pt-4">
+                    <button type="button" onclick="toggleAuthMode()" id="toggleBtn" class="text-emerald-700 font-semibold hover:text-emerald-800">Create account</button>
+                    <button type="submit" id="submitBtn" class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2 rounded font-medium">Next</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MAIN DASHBOARD (4 CARDS) -->
+    <div id="dashboard-page" class="hidden min-h-screen bg-overlay pt-20 pb-10 px-4 md:px-8">
+        <div class="max-w-4xl mx-auto">
+            <div class="mb-8">
+                <h1 class="text-3xl font-bold text-gray-800">Welcome, <span id="welcomeName">User</span></h1>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- CARD 1 - Courses -->
+                <div onclick="showColleges()" class="bg-white/90 p-6 rounded-xl shadow-lg cursor-pointer hover:bg-lightgreen/20 transition relative">
+                    <div class="absolute top-3 right-4 text-xs font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full">Card #1</div>
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-lg bg-lightgreen flex items-center justify-center"><i class="ri-book-open-line text-white text-xl"></i></div>
+                        <div><h3 class="font-semibold text-lg text-gray-800">My Course</h3><p class="text-sm text-gray-600">Explore program offerings</p></div>
+                    </div>
+                </div>
+
+                <!-- CARD 2 - Map -->
+                <div onclick="showMapLocations()" class="bg-white/90 p-6 rounded-xl shadow-lg cursor-pointer hover:bg-lightgreen/20 transition relative">
+                    <div class="absolute top-3 right-4 text-xs font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full">Card #2</div>
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-lg bg-lightgreen flex items-center justify-center"><i class="ri-map-pin-line text-white text-xl"></i></div>
+                        <div><h3 class="font-semibold text-lg text-gray-800">Campus Map</h3><p class="text-sm text-gray-600">Find 18 building locations</p></div>
+                    </div>
+                </div>
+
+                <!-- CARD 3 - Schedule -->
+                <div onclick="showPage('schedule')" class="bg-white/90 p-6 rounded-xl shadow-lg cursor-pointer hover:bg-lightgreen/20 transition relative">
+                    <div class="absolute top-3 right-4 text-xs font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full">Card #3</div>
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-lg bg-lightgreen flex items-center justify-center"><i class="ri-calendar-line text-white text-xl"></i></div>
+                        <div><h3 class="font-semibold text-lg text-gray-800">Class Schedule</h3><p class="text-sm text-gray-600">Check time</p></div>
+                    </div>
+                </div>
+
+                <!-- CARD 4 - Buildings -->
+<div onclick="showBuildings()" class="bg-white/90 p-6 rounded-xl shadow-lg cursor-pointer hover:bg-lightgreen/20 transition relative">
+
+    <div class="absolute top-3 right-4 text-xs font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full">
+        Card #4
+    </div>
+
+    <div class="flex items-center gap-4">
+
+        <div class="w-12 h-12 rounded-lg bg-lightgreen flex items-center justify-center">
+            <i class="ri-building-line text-white text-xl"></i>
+        </div>
+
+        <div>
+            <h3 class="font-semibold text-lg text-gray-800">
+                Academic Buildings
+            </h3>
+
+            <p class="text-sm text-gray-600">
+                View building list
+            </p>
+        </div>
+
+    </div>
+</div>
+
+                <!-- ===================== DRESS CODE CARD ===================== -->
+<!-- ADD THIS INSIDE THE DASHBOARD GRID (after Card #4) -->
+
+<!-- CARD 5 - Dress Code -->
+<div onclick="showDressCode()" class="bg-white/90 p-6 rounded-xl shadow-lg cursor-pointer hover:bg-lightgreen/20 transition relative">
+    <div class="absolute top-3 right-4 text-xs font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full">Card #5</div>
+    <div class="flex items-center gap-4">
+        <div class="w-12 h-12 rounded-lg bg-lightgreen flex items-center justify-center">
+            <i class="ri-shirt-line text-white text-xl"></i>
+        </div>
+        <div>
+            <h3 class="font-semibold text-lg text-gray-800">Dress Code</h3>
+            <p class="text-sm text-gray-600">View allowed dress code</p>
+        </div>
+    </div>
+</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- COLLEGES LIST (Sub-page of My Course) -->
+    <div id="colleges-page" class="hidden min-h-screen bg-overlay pt-20 pb-10 px-4 md:px-8">
+        <div class="max-w-4xl mx-auto">
+            <h2 class="text-2xl font-bold mb-6 text-gray-800">Select your College</h2>
+            <div id="college-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Filled by JS -->
+            </div>
+        </div>
+    </div>
+
+<!-- CAMPUS MAP PAGE -->
+<div id="map-locations-page" class="hidden min-h-screen bg-overlay pt-20 pb-10 px-4 md:px-8">
+
+    <div class="max-w-7xl mx-auto">
+
+        <h2 class="text-3xl font-bold text-gray-800 mb-6">
+            PLSP Campus Map Guide
+        </h2>
+        <!-- MAP IMAGE -->
+        <div class="bg-white/95 p-6 rounded-2xl shadow-xl mb-8">
+            <img src="https://images2.imgbox.com/71/34/41A3O757_o.jpg"
+                 class="w-full rounded-xl border-4 border-emerald-500">
+        </div>
+
+        <!-- MAP IMAGE -->
+<div class="bg-white/95 p-6 rounded-2xl shadow-xl mb-8">
+    <img src="https://images2.imgbox.com/71/34/41A3O757_o.jpg"
+         class="w-full rounded-xl border-4 border-emerald-500">
+</div>
+
+<!-- BUILDING LIST -->
+<div id="map-location-container"
+     class="grid grid-cols-1 md:grid-cols-2 gap-6">
+</div> 
+<div id="map-location-container"
+     class="grid grid-cols-1 md:grid-cols-2 gap-6">
+</div>
+
+</div>
+</div>
+
+<!-- COLLEGE DETAILS PAGE -->
+    <!-- COLLEGE DETAILS PAGE -->
+    <div id="college-detail-page" class="hidden min-h-screen bg-overlay pt-20 pb-10 px-4 md:px-8">
+        <div class="max-w-3xl mx-auto bg-white/95 p-8 rounded-2xl shadow-xl">
+            <h2 id="detail-title" class="text-2xl font-bold text-emerald-800 mb-6">College Title</h2>
+            <div id="detail-content" class="space-y-6 text-gray-700">
+                <!-- Filled by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- BUILDING INFO PAGE (Details for key buildings from map) -->
+    <div id="building-info-page" class="hidden min-h-screen bg-overlay pt-20 pb-10 px-4 md:px-8">
+        <div class="max-w-3xl mx-auto bg-white/95 p-8 rounded-2xl shadow-xl">
+            <h2 id="bldg-info-title" class="text-2xl font-bold text-emerald-800 mb-6">Building Info</h2>
+            <div id="bldg-info-content" class="space-y-6 text-gray-700">
+                <!-- Filled by JS -->
+            </div>
+        </div>
+    </div>
+<!-- ===================== DRESS CODE PAGE ===================== -->
+<!-- ADD THIS BELOW THE BUILDINGS PAGE -->
+
+<div id="dress-code-page" class="hidden min-h-screen bg-overlay pt-20 pb-10 px-4 md:px-8">
+    <div class="max-w-5xl mx-auto">
+        
+        <h2 class="text-3xl font-bold text-gray-800 mb-8 text-center">
+            DLSP Dress Code
+        </h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+            <!-- WOMEN CARD -->
+            <div onclick="showWomenDressCode()" 
+                 class="bg-white/90 p-6 rounded-2xl shadow-lg cursor-pointer hover:bg-emerald-50 transition">
+                
+                <div class="flex items-center gap-4 mb-4">
+                    <div class="w-14 h-14 rounded-full bg-emerald-500 flex items-center justify-center">
+                        <i class="ri-women-line text-white text-2xl"></i>
+                    </div>
+
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-800">
+                            Allowed for Women
+                        </h3>
+                        <p class="text-sm text-gray-600">
+                            Click to view dress code
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MEN CARD -->
+            <div onclick="showMenDressCode()" 
+                 class="bg-white/90 p-6 rounded-2xl shadow-lg cursor-pointer hover:bg-emerald-50 transition">
+                
+                <div class="flex items-center gap-4 mb-4">
+                    <div class="w-14 h-14 rounded-full bg-emerald-500 flex items-center justify-center">
+                        <i class="ri-men-line text-white text-2xl"></i>
+                    </div>
+
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-800">
+                            Allowed for Men
+                        </h3>
+                        <p class="text-sm text-gray-600">
+                            Click to view dress code
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+        <!-- ===================== WOMEN DRESS CODE PAGE ===================== -->
+<!-- ADD THIS BELOW DRESS CODE PAGE -->
+
+<div id="women-dress-page" class="hidden min-h-screen bg-overlay pt-20 pb-10 px-4 md:px-8">
+    <div class="max-w-4xl mx-auto bg-white/95 rounded-2xl shadow-xl p-8">
+
+        <h2 class="text-3xl font-bold text-emerald-700 mb-6">
+            Allowed for Women
+        </h2>
+
+        <div class="grid md:grid-cols-2 gap-6">
+
+            <!-- Allowed -->
+            <div class="bg-emerald-50 p-5 rounded-xl border border-emerald-200">
+                <h3 class="text-xl font-bold text-emerald-700 mb-4">
+                    Allowed
+                </h3>
+
+                <ul class="space-y-2 text-gray-700">
+                    <li>• Proper Hair Grooming</li>
+                    <li>• One Pair Earrings</li>
+                    <li>• Polo Shirt</li>
+                    <li>• Shirt (Plain or with minimal print)</li>
+                    <li>• Long Sleeves</li>
+                    <li>• Slacks</li>
+                    <li>• Skirt (2 inches below the knee)</li>
+                    <li>• Trousers</li>
+                    <li>• Close Shoes</li>
+                    <li>• Sandals with heels or stiletto</li>
+                </ul>
+            </div>
+
+            <!-- Not Allowed -->
+            <div class="bg-red-50 p-5 rounded-xl border border-red-200">
+                <h3 class="text-xl font-bold text-red-600 mb-4">
+                    Not Allowed
+                </h3>
+
+                <ul class="space-y-2 text-gray-700 text-sm">
+                    <li>• Piercings</li>
+                    <li>• Cap or Bonnet</li>
+                    <li>• Improper Hair Grooming</li>
+                    <li>• Heavy Makeup</li>
+                    <li>• Crop Top</li>
+                    <li>• Sleeveless</li>
+                    <li>• Spaghetti Straps</li>
+                    <li>• See-through Top</li>
+                    <li>• Shirt with Slices, Cuts or Holes</li>
+                    <li>• Tank Top</li>
+                    <li>• Hanging Top</li>
+                    <li>• Skin Tight Top</li>
+                    <li>• Off-shoulder</li>
+                    <li>• Leggings</li>
+                    <li>• Ripped or Tattered Jeans</li>
+                    <li>• Mini Skirt</li>
+                    <li>• Crocs</li>
+                    <li>• Slippers</li>
+                    <li>• Sandals (Flat, Slipper type, without heels)</li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- ===================== MEN DRESS CODE PAGE ===================== -->
+<!-- ADD THIS BELOW WOMEN DRESS PAGE -->
+
+<div id="men-dress-page" class="hidden min-h-screen bg-overlay pt-20 pb-10 px-4 md:px-8">
+    <div class="max-w-4xl mx-auto bg-white/95 rounded-2xl shadow-xl p-8">
+
+        <h2 class="text-3xl font-bold text-emerald-700 mb-6">
+            Allowed for Men
+        </h2>
+
+        <div class="grid md:grid-cols-2 gap-6">
+
+            <!-- Allowed -->
+            <div class="bg-emerald-50 p-5 rounded-xl border border-emerald-200">
+                <h3 class="text-xl font-bold text-emerald-700 mb-4">
+                    Allowed
+                </h3>
+
+                <ul class="space-y-2 text-gray-700">
+                    <li>• Proper Haircut</li>
+                    <li>• Polo</li>
+                    <li>• Polo Shirt</li>
+                    <li>• Shirt (Plain or with minimal print)</li>
+                    <li>• Long Sleeves</li>
+                    <li>• Pants</li>
+                    <li>• Slacks</li>
+                    <li>• Trouser</li>
+                    <li>• Closed Shoes</li>
+                </ul>
+            </div>
+
+            <!-- Not Allowed -->
+            <div class="bg-red-50 p-5 rounded-xl border border-red-200">
+                <h3 class="text-xl font-bold text-red-600 mb-4">
+                    Not Allowed
+                </h3>
+
+                <ul class="space-y-2 text-gray-700 text-sm">
+                    <li>• Earrings</li>
+                    <li>• Piercings</li>
+                    <li>• Cap</li>
+                    <li>• Bandanas</li>
+                    <li>• Visors</li>
+                    <li>• Improper Hair Grooming</li>
+                    <li>• Highlights</li>
+                    <li>• Dyed Long Hair</li>
+                    <li>• Punk Hairstyles</li>
+                    <li>• Shaved lines or symbols</li>
+                    <li>• Hoods</li>
+                    <li>• Sando</li>
+                    <li>• Muscle Shirt</li>
+                    <li>• See-through Top</li>
+                    <li>• Shorts</li>
+                    <li>• Slippers</li>
+                    <li>• Sandals</li>
+                    <li>• Crocs</li>
+                    <li>• Ripped or Tattered Jeans</li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- BUILDING DETAILS PAGE -->
+<div id="building-details-page" class="hidden min-h-screen bg-overlay pt-20 pb-10 px-4 md:px-8">
+
+    <div class="max-w-3xl mx-auto bg-white/95 p-8 rounded-2xl shadow-xl">
+
+        <h2 id="building-detail-title"
+            class="text-3xl font-bold text-emerald-700 mb-6">
+            Building Name
+        </h2>
+
+        <p id="building-detail-description"
+           class="text-gray-700 text-lg leading-relaxed">
+            Building description here
+        </p>
+
+    </div>
+
+</div>
+    <!-- PLACEHOLDER PAGES -->
+  
+  <div id="schedule-page" class="hidden min-h-screen bg-overlay pt-20 pb-10 px-4"><div class="max-w-2xl mx-auto bg-white/90 p-6 rounded-xl shadow"><h2>Schedule Placeholder</h2></div></div>
+  <!-- BUILDINGS PAGE -->
+<!-- BUILDINGS PAGE -->
+<div id="buildings-page" class="hidden min-h-screen bg-overlay pt-20 pb-10 px-4 md:px-8">
+
+    <div class="max-w-6xl mx-auto">
+
+        <h2 class="text-3xl font-bold text-gray-800 mb-8">
+            Academic Buildings
+        </h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+            <!-- BUILDING 1 -->
+            <div onclick="showBuildingDetails(
+                'Academic Building 1',
+                'Located near the Main Gate and ROTC Area.',
+                [
+                    'College of Teacher Education',
+                    'Dean’s Office',
+                    'PLSP Integrated School'
+                ]
+            )"
+            class="bg-white/90 p-6 rounded-xl shadow-lg cursor-pointer hover:bg-emerald-50 transition">
+                <h3 class="font-bold text-lg">Academic Building 1</h3>
+            </div>
+
+            <!-- BUILDING 2 -->
+            <div onclick="showBuildingDetails(
+                'Academic Building 2',
+                'Located near the University Library and Registrar.',
+                [
+                    'Office of University President',
+                    'University AVR Room',
+                    'Registrar Office',
+                    'College of Computer Studies and Technology Dean'
+                ]
+            )"
+            class="bg-white/90 p-6 rounded-xl shadow-lg cursor-pointer hover:bg-emerald-50 transition">
+                <h3 class="font-bold text-lg">Academic Building 2</h3>
+            </div>
+
+            <!-- BUILDING 3 -->
+            <div onclick="showBuildingDetails(
+                'Academic Building 3',
+                'Located at the center-left side of the campus.',
+                [
+                    'College of Business Administration Dean',
+                    'College of Accountancy Dean',
+                    'Science Laboratories'
+                ]
+            )"
+            class="bg-white/90 p-6 rounded-xl shadow-lg cursor-pointer hover:bg-emerald-50 transition">
+                <h3 class="font-bold text-lg">Academic Building 3</h3>
+            </div>
+
+            <!-- ✅ BUILDING 4 (FIXED + COMPLETE PROGRAMS) -->
+            <div onclick="showBuildingDetails(
+                'Academic Building 4',
+                'Located beside the Sports Pavilion.',
+                [
+                    'College of Arts and Science and Public Administration Dean’s Office',
+                    'Speech Laboratory',
+                    'Computer Laboratory',
+                    'NSTP Office'
+                ]
+            )"
+            class="bg-white/90 p-6 rounded-xl shadow-lg cursor-pointer hover:bg-emerald-50 transition">
+                <h3 class="font-bold text-lg">Academic Building 4</h3>
+            </div>
+
+            <!-- BUILDING 5 -->
+            <div onclick="showBuildingDetails(
+                'Academic Building 5',
+                'Located near the College of Engineering area.',
+                [
+                    'College of Engineering Dean'
+                ]
+            )"
+            class="bg-white/90 p-6 rounded-xl shadow-lg cursor-pointer hover:bg-emerald-50 transition">
+                <h3 class="font-bold text-lg">Academic Building 5</h3>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+    <script>
+        function showColleges() {
+    const container = document.getElementById('college-container');
+    container.innerHTML = '';
+
+    collegeData.forEach(college => {
+        const card = `
+            <div onclick="openCollege(${college.id})"
+                 class="bg-white/90 p-6 rounded-xl shadow-lg cursor-pointer hover:bg-emerald-50 transition">
+
+                <h3 class="font-bold text-lg text-gray-800">
+                    ${college.title}
+                </h3>
+
+                <p class="text-sm text-gray-600 mt-1">
+                    Click to view programs
+                </p>
+            </div>
+        `;
+
+        container.innerHTML += card;
+    });
+
+    currentPagePath.push('dashboard');
+    showPage('colleges');
+}
+function openCollege(id) {
+    const college = collegeData.find(c => c.id === id);
+    if (!college) return;
+
+    document.getElementById('detail-title').textContent = college.title;
+
+    let html = '';
+
+    college.programs.forEach(p => {
+        html += `<p>• ${p.name}</p>`;
+
+        if (p.majors) {
+            html += `<ul style="margin-left:20px;">
+                ${p.majors.map(m => `<li>- ${m}</li>`).join('')}
+            </ul>`;
+        }
+    });
+
+    document.getElementById('detail-content').innerHTML = html;
+
+    currentPagePath.push('colleges');
+    showPage('college-detail');
+}
+        let isSignUp = false;
+        let registeredUsers = [{ email: "test@gmail.com", pass: "1234" }];
+        let currentPagePath = []; 
+
+        const buildingDetailsData = [
+
+{
+    id: 1,
+    name: "MAIN GATE",
+    description:
+    "The Main Gate is the primary entrance of PLSP. Students, visitors, and faculty members pass through this area every day. Security guards monitor the entrance to ensure campus safety and proper identification.",
+    offices: ["Security Office", "Entrance Monitoring Area"]
+},
+
+{
+    id: 2,
+    name: "ROTC AREA",
+    description:
+    "The ROTC Area is used for military training, drills, physical exercises, and NSTP activities. Students gather here during ROTC formations and outdoor exercises.",
+    offices: ["ROTC Training Area", "NSTP Activities"]
+},
+
+{
+    id: 3,
+    name: "ACADEMIC BUILDING I",
+    description:
+    "Academic Building I is home to the College of Teacher Education and PLSP Integrated School. Education students attend lectures, teaching demonstrations, and classroom activities here.",
+    offices: [
+        "College of Teacher Education",
+        "Dean's Office",
+        "PLSP Integrated School"
+    ]
+},
+
+{
+    id: 4,
+    name: "COCINA DE VICENTE",
+    description:
+    "Cocina De Vicente is one of the food areas inside the campus. Students buy meals, snacks, and drinks here during breaks and lunch time.",
+    offices: [
+        "Food Stall Area",
+        "Student Dining Area"
+    ]
+},
+
+{
+    id: 5,
+    name: "ADMINISTRATION BUILDING",
+    description:
+    "The Administration Building contains important university offices for enrollment, payments, records, guidance, and official student transactions.",
+    offices: [
+        "Finance Office",
+        "Guidance Office",
+        "Admission Office",
+        "Human Resource Office",
+        "Alumni Affairs Office",
+        "External Affairs Office"
+    ]
+},
+
+{
+    id: 6,
+    name: "SPORTS PAVILION",
+    description:
+    "The Sports Pavilion is used for PE classes, intramurals, sports events, practices, and university programs.",
+    offices: [
+        "Basketball Court",
+        "Sports Training Area"
+    ]
+},
+
+{
+    id: 7,
+    name: "ACADEMIC BUILDING IV",
+    description:
+    "Academic Building IV contains classrooms, laboratories, and offices for Arts and Sciences students.",
+    offices: [
+        "Speech Laboratory",
+        "Computer Laboratory",
+        "NSTP Office",
+        "College of Arts and Sciences"
+    ]
+},
+
+{
+    id: 8,
+    name: "ACADEMIC BUILDING V",
+    description:
+    "Academic Building V is the main building for Engineering students. Laboratory classes and technical subjects are conducted here.",
+    offices: [
+        "College of Engineering",
+        "Engineering Laboratories"
+    ]
+},
+
+{
+    id: 9,
+    name: "HON. PABLO O. TICZON BUILDING",
+    description:
+    "This building is used for student development programs, seminars, performances, and large university activities.",
+    offices: [
+        "Tanghalang Pablo O. Ticzon",
+        "Student Development Center",
+        "Athletic Facilities Office"
+    ]
+},
+
+{
+    id: 10,
+    name: "GRADUATE SCHOOL",
+    description:
+    "The Graduate School handles advanced studies including master's degree programs and professional education.",
+    offices: [
+        "Graduate School Dean's Office",
+        "Graduate Classrooms"
+    ]
+},
+
+{
+    id: 11,
+    name: "COLLEGE OF ALLIED HEALTH SCIENCES",
+    description:
+    "This building is used for nursing and health-related programs. Students perform lectures and laboratory activities here.",
+    offices: [
+        "Health Sciences Office",
+        "Nursing Laboratories"
+    ]
+},
+
+{
+    id: 12,
+    name: "ACADEMIC BUILDING III",
+    description:
+    "Academic Building III contains the College of Business Administration, Accountancy, and science laboratories.",
+    offices: [
+        "College of Accountancy",
+        "Business Administration Office",
+        "Science Laboratories"
+    ]
+},
+
+{
+    id: 13,
+    name: "UNIVERSITY HEALTH SERVICES",
+    description:
+    "University Health Services provides medical assistance, consultations, and emergency care for students and staff.",
+    offices: [
+        "Clinic",
+        "Medical Consultation Room"
+    ]
+},
+
+{
+    id: 14,
+    name: "ACADEMIC BUILDING II",
+    description:
+    "Academic Building II contains the Registrar, AV Room, and College of Computer Studies and Technology.",
+    offices: [
+        "Registrar Office",
+        "AVR Room",
+        "CCST Dean's Office"
+    ]
+},
+
+{
+    id: 15,
+    name: "UNIVERSITY LIBRARY",
+    description:
+    "The University Library provides books, research materials, internet resources, and quiet study areas.",
+    offices: [
+        "Research Area",
+        "Reading Area",
+        "Computer Research Section"
+    ]
+},
+
+{
+    id: 16,
+    name: "UNIVERSITY CAFETERIA",
+    description:
+    "The University Cafeteria is a common eating area where students and faculty buy affordable meals and snacks.",
+    offices: [
+        "Food Counters",
+        "Dining Area"
+    ]
+},
+
+{
+    id: 17,
+    name: "FLAG POLE",
+    description:
+    "The Flag Pole area is used for ceremonies, flag raising, university programs, and important school gatherings.",
+    offices: [
+        "Ceremony Area"
+    ]
+},
+
+{
+    id: 18,
+    name: "REAR GATE",
+    description:
+    "The Rear Gate serves as an additional entrance and exit point to reduce traffic near the Main Gate.",
+    offices: [
+        "Exit Area",
+        "Security Monitoring"
+    ]
+}
+
+];
+        // My Course Data (College -> Programs)
+        const collegeData = [
+            { id: 1, title: "COLLEGE OF TEACHER EDUCATION", programs: [
+                { name: "Bachelor of Elementary Education"}, { name: "Bachelor of Physical Education"},
+                { name: "Bachelor of Special Needs Education"}, { name: "Bachelor of Secondary Education", majors: ["English", "Filipino", "Mathematics", "Social Studies", "Science"] },
+                { name: "Bachelor of Technical-Vocational Teacher Education", majors: ["Automotive Technology", "Food and Service Management", "Computer Programming"] },
+                { name: "Teacher Certificate Program"} ] },
+            { id: 2, title: "COLLEGE OF COMPUTING SCIENCE AND ENGINEERING", programs: [
+                { name: "Bachelor of Science in Computer Engineering"}, { name: "Bachelor of Science in Industrial Engineering"},
+                { name: "Bachelor of Science in Information Technology", majors: ["Web and Game Development", "Software Development", "Network Technology"] },
+                { name: "Bachelor of Science in Information Systems", majors: ["Business Analytics", "System and Network Security", "Project Management"] } ] },
+            { id: 3, title: "COLLEGE OF ARTS AND SCIENCES", programs: [{ name: "Bachelor of Science in Psychology"}, { name: "Bachelor of Science in Economic"}, { name: "Bachelor of Arts in Communication"}, { name: "Bachelor of Arts in Political Science"} ] },
+            { id: 4, title: "COLLEGE OF ACCOUNTANCY", programs: [{ name: "Bachelor of Science in Accountancy"}, { name: "Bachelor of Science in Management Accounting"}, { name: "Bachelor of Science in Accounting Information System"} ] },
+            { id: 5, title: "COLLEGE OF BUSINESS ADMINISTRATION AND MANAGEMENT", programs: [{ name: "Bachelor of Science in Business Administration", majors: ["Marketing Management", "Financial Management", "Human Resource Development"] }, { name: "Bachelor of Science in Entrepreneurship"}, { name: "Bachelor of Science in Office Administration"}, { name: "Bachelor of Public Administration"} ] },
+            { id: 6, title: "COLLEGE OF NURSING AND ALLIED HEALTH SCIENCES", programs: [{ name: "Bachelor of Science in Nursing (FIRST SEMESTER ONLY)"} ] },
+            { id: 7, title: "COLLEGE OF TOURISM AND HOSPITALITY MANAGEMENT", programs: [{ name: "Bachelor of Science in Hospitality Management"}, { name: "Bachelor of Science in Tourism Management"} ] }
+        ];
+
+
+function showDressCode() {
+    currentPagePath.push('dashboard');
+    showPage('dress-code');
+}
+
+function showWomenDressCode() {
+    currentPagePath.push('dress-code');
+    showPage('women-dress');
+}
+
+function showMenDressCode() {
+    currentPagePath.push('dress-code');
+    showPage('men-dress');
+}
+        // --- AUTH & NAV ---
+
+        function toggleAuthMode() {
+            isSignUp = !isSignUp;
+            document.getElementById('auth-title').textContent = isSignUp ? "Create Account" : "Sign in";
+            document.getElementById('auth-subtitle').textContent = isSignUp ? "Join DLSP Locator" : "Use your Gmail account";
+            document.getElementById('toggleBtn').textContent = isSignUp ? "Already have an account?" : "Create account";
+            document.getElementById('submitBtn').textContent = isSignUp ? "Sign Up" : "Next";
+        }
+
+        function handleAuth(e) {
+
+    e.preventDefault();
+
+    const email = document.getElementById('email').value.trim();
+
+    const pass = document.getElementById('password').value.trim();
+
+    const error = document.getElementById('errorMsg');
+
+    // Hide error first
+    error.classList.add('hidden');
+
+    // ================= SIGN UP =================
+    if (isSignUp) {
+
+        // Check if account already exists
+        const existingUser = registeredUsers.find(
+            user => user.email === email
+        );
+
+        if (existingUser) {
+
+            error.textContent = "Account already exists.";
+
+            error.classList.remove('hidden');
+
+            return;
+        }
+
+        // Save new account
+        registeredUsers.push({
+            email: email,
+            pass: pass
+        });
+
+        alert("Account created successfully!");
+
+        toggleAuthMode();
+
+        return;
+    }
+
+    // ================= LOGIN =================
+    const user = registeredUsers.find(
+        user => user.email === email && user.pass === pass
+    );
+
+    if (user) {
+
+        // Show username on dashboard
+        document.getElementById('welcomeName').textContent =
+            email.split('@')[0];
+
+        // Go to dashboard
+        showPage('dashboard');
+
+    } else {
+
+        // Show login error
+        error.textContent =
+            "Invalid credentials. Use test@gmail.com / 1234";
+
+        error.classList.remove('hidden');
+    }
+}
+
+        function showPage(pageName) {
+            document.querySelectorAll('div[id$="-page"]').forEach(el => el.classList.add('hidden'));
+            document.getElementById(pageName + '-page').classList.remove('hidden');
+            document.getElementById('navbar').classList.toggle('hidden', pageName === 'login');
+            
+            if (pageName === 'dashboard' || pageName === 'login') {
+                currentPagePath = []; 
+            } else if (pageName === 'buildings' || pageName === 'schedule') { 
+                currentPagePath = ['dashboard'];
+            }
+        }
+
+        function smartBack() {
+            if (currentPagePath.length === 0) return; 
+            const previousPage = currentPagePath.pop();
+            showPage(previousPage);
+        }
+
+        function logout() {
+            document.getElementById('email').value = '';
+            document.getElementById('password').value = '';
+            currentPagePath = [];
+            showPage('login');
+        }
+
+        // --- MY COURSE LOGIC ---
+function showBuildings() {
+    currentPagePath.push('dashboard');
+    showPage('buildings');
+} 
+function showBuildingDetails(title, description, programs = []) {
+
+    document.getElementById('building-detail-title').textContent = title;
+
+    let programHTML = "";
+
+    if (programs.length > 0) {
+        programHTML = `
+            <h3 class="font-bold text-emerald-700 mt-4 mb-2">
+                Programs:
+            </h3>
+
+            <ul class="list-disc list-inside text-gray-700">
+                ${programs.map(p => `<li>${p}</li>`).join('')}
+            </ul>
+        `;
+    }
+
+    document.getElementById('building-detail-description').innerHTML = `
+        <p class="text-gray-700 mb-4">${description}</p>
+        ${programHTML}
+    `;
+
+    currentPagePath.push('buildings');
+    showPage('building-details');
+}
+
+        // --- CAMPUS MAP LOGIC (The New Section) ---
+
+    
+
+ // --- CAMPUS MAP LOGIC ---
+
+function showMapLocations() {
+
+    const container = document.getElementById('map-location-container');
+
+    container.innerHTML = '';
+
+    buildingDetailsData.forEach(building => {
+
+        const card = `
+            <div onclick="showMapBuildingDetails(${building.id})"
+                 class="bg-white/95 p-6 rounded-2xl shadow-lg cursor-pointer hover:bg-emerald-50 transition">
+
+                <div class="flex items-center gap-4 mb-4">
+
+                    <div class="w-12 h-12 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold text-lg">
+                        ${building.id}
+                    </div>
+
+                    <div class="flex-1">
+
+                        <h3 class="text-xl font-bold text-emerald-700">
+                            ${building.name}
+                        </h3>
+
+                        <p class="text-gray-700 text-sm mt-2">
+                            ${building.description}
+                        </p>
+
+                        ${building.offices ? `
+                        <div class="mt-3">
+                            <p class="font-semibold text-emerald-700 mb-1">
+                                Offices:
+                            </p>
+
+                            <ul class="list-disc list-inside text-sm text-gray-600">
+                                ${building.offices.map(office => `
+                                    <li>${office}</li>
+                                `).join('')}
+                            </ul>
+                        </div>
+                        ` : ''}
+
+                    </div>
+
+                </div>
+
+            </div>
+        `;
+
+        container.innerHTML += card;
+
+    });
+
+    currentPagePath.push('dashboard');
+
+    showPage('map-locations');
+}
+
+
+
+function showMapBuildingDetails(id) {
+
+    const building = buildingDetailsData.find(
+        b => Number(b.id) === Number(id)
+    );
+
+    if (!building) return;
+
+    document.getElementById('building-detail-title').textContent = building.name;
+
+    document.getElementById('building-detail-description').innerHTML = `
+        <p class="mb-4">${building.description}</p>
+
+        <h3 class="font-bold text-emerald-700 mb-2">Offices:</h3>
+
+        <ul class="list-disc list-inside text-gray-700">
+            ${(building.offices || []).map(
+                office => `<li>${office}</li>`
+            ).join('')}
+        </ul>
+    `;
+
+    currentPagePath.push('map-locations');
+    showPage('building-details');
+}
+   function showMapLocations() {
+    const container = document.getElementById('map-location-container');
+    container.innerHTML = '';
+
+    buildingDetailsData.forEach(building => {
+
+        container.innerHTML += `
+            <div onclick="showMapBuildingDetails(${building.id})"
+                 class="bg-white/95 p-6 rounded-2xl shadow-lg cursor-pointer hover:bg-emerald-50 transition">
+
+                <div class="flex items-center gap-4 mb-4">
+
+                    <div class="w-12 h-12 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold text-lg">
+                        ${building.id}
+                    </div>
+
+                    <div class="flex-1">
+
+                        <h3 class="text-xl font-bold text-emerald-700">
+                            ${building.name}
+                        </h3>
+
+                        <p class="text-gray-700 text-sm mt-2">
+                            ${building.description}
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+        `;
+    });
+
+    currentPagePath.push('dashboard');
+    showPage('map-locations');
+}
+
+</script>
+
+</body>
+</html>
