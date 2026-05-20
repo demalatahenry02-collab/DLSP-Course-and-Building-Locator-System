@@ -33,7 +33,7 @@
 <body class="bg-gray-50">
 
     <!-- NAVBAR (Hidden on login) -->
-    <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 bg-lightgreen/80 backdrop-blur-sm hidden">
+    <nav id="navbar" class="fixed top-0 left-0 right-0 z-50bg-white/90 backdrop-blur-md shadow-md border-b border-emerald-200 hidden">
         <div class="w-full px-4 md:px-8 py-3 flex items-center justify-between">
             <button onclick="showPage('dashboard')" class="flex items-center gap-2">
                 <img src="https://static.readdy.ai/image/1bddd4377eb8b0a4a6d2b3788db1ce7f/02c1eadfd8a44d8b8c3d320560de775f.png" alt="Logo" class="w-10 h-10 rounded-full">
@@ -41,7 +41,10 @@
             </button>
             <div class="flex gap-3">
                 <button onclick="showPage('dashboard')" class="px-3 py-2 text-sm text-gray-800 hover:bg-white/30 rounded"><i class="ri-home-line"></i> Home</button>
-                <button onclick="smartBack()" class="px-3 py-2 text-sm text-gray-800 hover:bg-white/30 rounded"><i class="ri-arrow-left-line"></i> Back</button>
+               <button onclick="smartBack()" 
+    class="px-3 py-2 text-sm font-semibold text-emerald-800 hover:bg-emerald-100 rounded flex items-center gap-1">
+    <i class="ri-arrow-left-line"></i> Back
+</button>
                 <button onclick="logout()" class="px-3 py-2 text-sm text-red-600 hover:bg-white/30 rounded"><i class="ri-logout-box-r-line"></i> Logout</button>
             </div>
         </div>
@@ -96,7 +99,7 @@
                 </div>
 
                 <!-- CARD 3 - DLSP INFORMATION -->
-<div onclick="showPage('dlsp-info')" 
+ <div onclick="showDLSPInfo()"
      class="bg-white/90 p-6 rounded-xl shadow-lg cursor-pointer hover:bg-lightgreen/20 transition relative">
 
     <div class="absolute top-3 right-4 text-xs font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full">
@@ -534,7 +537,7 @@
             PLSP INFORMATION
         </h2>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
 
             <!-- UNIVERSITY NAME -->
             <div onclick="showDLSPContent('University Name', `
@@ -546,7 +549,7 @@
             `)"
             class="bg-white/95 p-6 rounded-2xl shadow-lg cursor-pointer hover:bg-emerald-50 transition">
 
-                <div class="w-14 h-14 bg-emerald-500 rounded-full flex items-center justify-center mb-4">
+                <div class="w-10 h-10 bg-emerald-500 rounded-full flex items-center justify-center mb-3">
                     <i class="ri-building-line text-white text-2xl"></i>
                 </div>
 
@@ -564,7 +567,7 @@
             `)"
             class="bg-white/95 p-6 rounded-2xl shadow-lg cursor-pointer hover:bg-emerald-50 transition">
 
-                <div class="w-14 h-14 bg-emerald-500 rounded-full flex items-center justify-center mb-4">
+                <div class="w-10 h-10 bg-emerald-500 rounded-full flex items-center justify-center mb-3">
                     <i class="ri-eye-line text-white text-2xl"></i>
                 </div>
 
@@ -582,7 +585,7 @@
             `)"
             class="bg-white/95 p-6 rounded-2xl shadow-lg cursor-pointer hover:bg-emerald-50 transition">
 
-                <div class="w-14 h-14 bg-emerald-500 rounded-full flex items-center justify-center mb-4">
+               <div class="w-10 h-10 bg-emerald-500 rounded-full flex items-center justify-center mb-3">
                     <i class="ri-flag-line text-white text-2xl"></i>
                 </div>
 
@@ -598,9 +601,9 @@
                     The Pamantasan ng Lungsod ng San Pablo commits to sustainable quality education adhering to the highest standards of excellence in institution, research, extension, production, and administrative services by upholding a continuous quality management system for client satisfaction through employee and student development anchored on constitutional mandates, statutory, and regulatory requirements while promoting a God-loving, safe, and green environment for all.
                 </p>
             `)"
-            class="bg-white/95 p-6 rounded-2xl shadow-lg cursor-pointer hover:bg-emerald-50 transition">
+            class="bg-white/95 p-6 rounded-xl shadow-lg cursor-pointer hover:bg-emerald-50 transition">
 
-                <div class="w-14 h-14 bg-emerald-500 rounded-full flex items-center justify-center mb-4">
+               <div class="w-10 h-10 bg-emerald-500 rounded-full flex items-center justify-center mb-3">
                     <i class="ri-award-line text-white text-2xl"></i>
                 </div>
 
@@ -844,6 +847,7 @@ function openCollege(id) {
     name: "1 MAIN GATE",
     description:
     "The Main Gate is the primary entrance of PLSP. Students, visitors, and faculty members pass through this area every day. Security guards monitor the entrance to ensure campus safety and proper identification.",
+    locationGuide: "Main Gate is located at the entrance area on the left side of the map.",
     offices: ["Security Office", "Entrance Monitoring Area"]
 },
 
@@ -852,6 +856,7 @@ function openCollege(id) {
     name: "2 ROTC AREA",
     description:
     "The ROTC Area is used for military training, drills, physical exercises, and NSTP activities. Students gather here during ROTC formations and outdoor exercises.",
+    locationGuide: "ROTC is situated just beside the Main Gate.",
     offices: ["ROTC Training Area", "NSTP Activities"]
 },
 
@@ -860,11 +865,8 @@ function openCollege(id) {
     name: "3 ACADEMIC BUILDING I",
     description:
     "Academic Building I is home to the College of Teacher Education and PLSP Integrated School. Education students attend lectures, teaching demonstrations, and classroom activities here.",
-    offices: [
-        "College of Teacher Education",
-        "Dean's Office",
-        "PLSP Integrated School"
-    ]
+    locationGuide: "Academic Building I is positioned near the Main Gate area, close to the ROTC.",
+    offices: ["College of Teacher Education", "Dean's Office", "PLSP Integrated School"]
 },
 
 {
@@ -872,10 +874,8 @@ function openCollege(id) {
     name: "4 COCINA DE VICENTE",
     description:
     "Cocina De Vicente is one of the food areas inside the campus. Students buy meals, snacks, and drinks here during breaks and lunch time.",
-    offices: [
-        "Food Stall Area",
-        "Student Dining Area"
-    ]
+    locationGuide: "Cocina de Vicente is located between Academic Building I and the Administration Building.",
+    offices: ["Food Stall Area", "Student Dining Area"]
 },
 
 {
@@ -883,6 +883,7 @@ function openCollege(id) {
     name: "5 ADMINISTRATION BUILDING",
     description:
     "The Administration Building contains important university offices for enrollment, payments, records, guidance, and official student transactions.",
+    locationGuide: "Administration Building is found in the central-left part of the campus.",
     offices: [
         "Finance Office",
         "Guidance Office",
@@ -898,10 +899,8 @@ function openCollege(id) {
     name: "6 SPORTS PAVILION",
     description:
     "The Sports Pavilion is used for PE classes, intramurals, sports events, practices, and university programs.",
-    offices: [
-        "Basketball Court",
-        "Sports Training Area"
-    ]
+    locationGuide: "Sports Pavilion is situated near the center of the map, close to the large open area.",
+    offices: ["Basketball Court", "Sports Training Area"]
 },
 
 {
@@ -909,6 +908,7 @@ function openCollege(id) {
     name: "7 ACADEMIC BUILDING IV",
     description:
     "Academic Building IV contains classrooms, laboratories, and offices for Arts and Sciences students.",
+    locationGuide: "Academic Building IV is located on the left side, near the Sports Pavilion.",
     offices: [
         "Speech Laboratory",
         "Computer Laboratory",
@@ -921,18 +921,17 @@ function openCollege(id) {
     id: 8,
     name: "8 ACADEMIC BUILDING V",
     description:
-    "Academic Building V is the main building for Engineering students. Laboratory classes and technical subjects are conducted here.",
-    offices: [
-        "College of Engineering",
-        "Engineering Laboratories"
-    ]
+    "Academic Building V is the main building for Engineering students.",
+    locationGuide: "Academic Building V is positioned in the upper-central part of the campus.",
+    offices: ["College of Engineering", "Engineering Laboratories"]
 },
 
 {
     id: 9,
     name: "9 HON. PABLO O. TICZON BUILDING",
     description:
-    "This building is used for student development programs, seminars, performances, and large university activities.",
+    "This building is used for student development programs, seminars, and large university activities.",
+    locationGuide: "Hon. Pablo O. Ticzon Building is located next to Academic Building V.",
     offices: [
         "Tanghalang Pablo O. Ticzon",
         "Student Development Center",
@@ -942,31 +941,28 @@ function openCollege(id) {
 
 {
     id: 10,
-    name: " 10 GRADUATE SCHOOL",
+    name: "10 GRADUATE SCHOOL",
     description:
-    "The Graduate School handles advanced studies including master's degree programs and professional education.",
-    offices: [
-        "Graduate School Dean's Office",
-        "Graduate Classrooms"
-    ]
+    "The Graduate School handles master's degree programs and professional education.",
+    locationGuide: "Graduate School is situated in the upper-right section of the campus.",
+    offices: ["Graduate School Dean's Office", "Graduate Classrooms"]
 },
 
 {
     id: 11,
     name: "11 COLLEGE OF ALLIED HEALTH SCIENCES",
     description:
-    "This building is used for nursing and health-related programs. Students perform lectures and laboratory activities here.",
-    offices: [
-        "Health Sciences Office",
-        "Nursing Laboratories"
-    ]
+    "This building is used for nursing and health-related programs.",
+    locationGuide: "College of Allied Health Sciences is located beside the Graduate School.",
+    offices: ["Health Sciences Office", "Nursing Laboratories"]
 },
 
 {
     id: 12,
     name: "12 ACADEMIC BUILDING III",
     description:
-    "Academic Building III contains the College of Business Administration, Accountancy, and science laboratories.",
+    "Academic Building III contains Business Administration, Accountancy, and science laboratories.",
+    locationGuide: "Academic Building III is positioned near the center-right area.",
     offices: [
         "College of Accountancy",
         "Business Administration Office",
@@ -978,70 +974,59 @@ function openCollege(id) {
     id: 13,
     name: "13 UNIVERSITY HEALTH SERVICES",
     description:
-    "University Health Services provides medical assistance, consultations, and emergency care for students and staff.",
-    offices: [
-        "Clinic",
-        "Medical Consultation Room"
-    ]
+    "Provides medical assistance, consultations, and emergency care.",
+    locationGuide: "University Health Services is located on the right side, near Academic Building II.",
+    offices: ["Clinic", "Medical Consultation Room"]
 },
 
 {
     id: 14,
     name: "14 ACADEMIC BUILDING II",
     description:
-    "Academic Building II contains the Registrar, AV Room, and College of Computer Studies and Technology.",
-    offices: [
-        "Registrar Office",
-        "AVR Room",
-        "CCST Dean's Office"
-    ]
+    "Contains the Registrar, AV Room, and Computer Studies offices.",
+    locationGuide: "Academic Building II is situated in the right section of the campus.",
+    offices: ["Registrar Office", "AVR Room", "CCST Dean's Office"]
 },
 
 {
     id: 15,
     name: "15 UNIVERSITY LIBRARY",
     description:
-    "The University Library provides books, research materials, internet resources, and quiet study areas.",
-    offices: [
-        "Research Area",
-        "Reading Area",
-        "Computer Research Section"
-    ]
+    "Provides books, research materials, and quiet study areas.",
+    locationGuide: "University Library is located next to Academic Building II.",
+    offices: ["Research Area", "Reading Area", "Computer Research Section"]
 },
 
 {
     id: 16,
     name: "16 UNIVERSITY CAFETERIA",
     description:
-    "The University Cafeteria is a common eating area where students and faculty buy affordable meals and snacks.",
-    offices: [
-        "Food Counters",
-        "Dining Area"
-    ]
+    "Common eating area for students and staff.",
+    locationGuide: "University Cafeteria is positioned near the rear part of the campus.",
+    offices: ["Food Counters", "Dining Area"]
 },
 
 {
     id: 17,
     name: "17 FLAG POLE",
     description:
-    "The Flag Pole area is used for ceremonies, flag raising, university programs, and important school gatherings.",
-    offices: [
-        "Ceremony Area"
-    ]
+    "Used for ceremonies and flag raising activities.",
+    locationGuide: "Flag Pole is located in the open area near the center.",
+    offices: ["Ceremony Area"]
 },
 
 {
     id: 18,
-    name: "18REAR GATE",
+    name: "18 REAR GATE",
     description:
-    "The Rear Gate serves as an additional entrance and exit point to reduce traffic near the Main Gate.",
-    offices: [
-        "Exit Area",
-        "Security Monitoring"
-    ]
+    "Additional entrance and exit point of the campus.",
+    locationGuide: "Rear Gate is situated at the far end on the right side of the map.",
+    offices: ["Exit Area", "Security Monitoring"]
 }
 
 ];
+
+
         // My Course Data (College -> Programs)
         const collegeData = [
             { id: 1, title: "COLLEGE OF TEACHER EDUCATION", programs: [
@@ -1060,7 +1045,10 @@ function openCollege(id) {
             { id: 7, title: "COLLEGE OF TOURISM AND HOSPITALITY MANAGEMENT", programs: [{ name: "Bachelor of Science in Hospitality Management"}, { name: "Bachelor of Science in Tourism Management"} ] }
         ];
 
-
+function showDLSPInfo() {
+    currentPagePath.push('dashboard');
+    showPage('dlsp-info');
+}
 function showDressCode() {
     currentPagePath.push('dashboard');
     showPage('dress-code');
@@ -1215,63 +1203,83 @@ function showBuildingDetails(title, description, programs = []) {
 
  // --- CAMPUS MAP LOGIC ---
 
+
+
 function showMapLocations() {
 
+    // GET THE CONTAINER
     const container = document.getElementById('map-location-container');
 
+    // CLEAR OLD CONTENT
     container.innerHTML = '';
 
+    // LOOP ALL BUILDINGS
     buildingDetailsData.forEach(building => {
 
-        const card = `
+        // CREATE CARD
+        container.innerHTML += `
+
             <div onclick="showMapBuildingDetails(${building.id})"
-                 class="bg-white/95 p-6 rounded-2xl shadow-lg cursor-pointer hover:bg-emerald-50 transition">
 
-                <div class="flex items-center gap-4 mb-4">
+                class="bg-white/95 
+                       p-6 
+                       rounded-2xl 
+                       shadow-lg 
+                       cursor-pointer 
+                       hover:bg-emerald-50 
+                       transition">
 
-                    <div class="w-12 h-12 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold text-lg">
+                <div class="flex items-center gap-4">
+
+                    <!-- BUILDING NUMBER -->
+                    <div class="w-12 h-12 
+                                rounded-full 
+                                bg-emerald-600 
+                                text-white 
+                                flex 
+                                items-center 
+                                justify-center 
+                                font-bold 
+                                text-lg">
+
                         ${building.id}
+
                     </div>
 
-                    <div class="flex-1">
+                    <!-- BUILDING NAME -->
+                    <div>
 
-                        <h3 class="text-xl font-bold text-emerald-700">
+                        <h3 class="text-xl 
+                                   font-bold 
+                                   text-emerald-700">
+
                             ${building.name}
+
                         </h3>
 
-                        <p class="text-gray-700 text-sm mt-2">
-                            ${building.description}
+                        <p class="text-gray-500 text-sm">
+
+                            Click to view information
+
                         </p>
-
-                        ${building.offices ? `
-                        <div class="mt-3">
-                            <p class="font-semibold text-emerald-700 mb-1">
-                                Offices:
-                            </p>
-
-                            <ul class="list-disc list-inside text-sm text-gray-600">
-                                ${building.offices.map(office => `
-                                    <li>${office}</li>
-                                `).join('')}
-                            </ul>
-                        </div>
-                        ` : ''}
 
                     </div>
 
                 </div>
 
             </div>
+
         `;
-
-        container.innerHTML += card;
-
     });
 
+    // SAVE PREVIOUS PAGE
     currentPagePath.push('dashboard');
 
+    // OPEN MAP PAGE
     showPage('map-locations');
 }
+
+
 
 function showDLSPContent(title, content) {
 
@@ -1292,60 +1300,52 @@ function showMapBuildingDetails(id) {
 
     if (!building) return;
 
-    document.getElementById('building-detail-title').textContent = building.name;
+    document.getElementById('building-detail-title').textContent =
+        building.name;
 
     document.getElementById('building-detail-description').innerHTML = `
-        <p class="mb-4">${building.description}</p>
 
-        <h3 class="font-bold text-emerald-700 mb-2">Offices:</h3>
+        <!-- DESCRIPTION -->
+        <div class="mb-6">
+            <h3 class="font-bold text-emerald-700 mb-2">
+                Description
+            </h3>
 
-        <ul class="list-disc list-inside text-gray-700">
-            ${(building.offices || []).map(
-                office => `<li>${office}</li>`
-            ).join('')}
-        </ul>
+            <p class="text-gray-700 leading-7">
+                ${building.description}
+            </p>
+        </div>
+
+        <!-- LOCATION GUIDE -->
+        <div class="mb-6">
+            <h3 class="font-bold text-emerald-700 mb-2">
+                Location Guide
+            </h3>
+
+            <p class="text-gray-700 leading-7">
+                ${building.locationGuide}
+            </p>
+        </div>
+
+        <!-- OFFICES -->
+        <div>
+            <h3 class="font-bold text-emerald-700 mb-2">
+                Offices
+            </h3>
+
+            <ul class="list-disc list-inside text-gray-700">
+                ${(building.offices || []).map(
+                    office => `<li>${office}</li>`
+                ).join('')}
+            </ul>
+        </div>
     `;
 
     currentPagePath.push('map-locations');
+
     showPage('building-details');
 }
-   function showMapLocations() {
-    const container = document.getElementById('map-location-container');
-    container.innerHTML = '';
 
-    buildingDetailsData.forEach(building => {
-
-        container.innerHTML += `
-            <div onclick="showMapBuildingDetails(${building.id})"
-                 class="bg-white/95 p-6 rounded-2xl shadow-lg cursor-pointer hover:bg-emerald-50 transition">
-
-                <div class="flex items-center gap-4 mb-4">
-
-                    <div class="w-12 h-12 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold text-lg">
-                        ${building.id}
-                    </div>
-
-                    <div class="flex-1">
-
-                        <h3 class="text-xl font-bold text-emerald-700">
-                            ${building.name}
-                        </h3>
-
-                        <p class="text-gray-700 text-sm mt-2">
-                            ${building.description}
-                        </p>
-
-                    </div>
-
-                </div>
-
-            </div>
-        `;
-    });
-
-    currentPagePath.push('dashboard');
-    showPage('map-locations');
-}
 
 </script>
 
